@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Poza Kadrem</title>
+<meta name="description" content="Poza Kadrem – miejskie spacery fotograficzne dla amatorów. Naucz się robić lepsze zdjęcia własnym telefonem.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a sunny walk through a city in photos; one tram corner is fixed stop by stop while you scroll, then you compare it yourself and sign up. Deliberately light in every theme (Marta: "jasna, weselsza, przyjaźniejsza"). */
+:root {
+  color-scheme: light;
+  --bg: #FFFCF6;        /* morning paper */
+  --paper: #FFFFFF;
+  --ink: #232539;       /* soft navy instead of black */
+  --muted: #5C5F75;
+  --line: rgba(35, 37, 57, .12);
+  --tram: #D63A24;      /* Lisbon-tram red: the one CTA colour */
+  --on-tram: #FFFFFF;
+  --sun: #FFC93C;       /* viewfinder marks, highlights */
+  --sun-soft: #FFF1C7;
+  --sky: #E6F2FF;       /* band behind the walk sequence */
+  --mint: #E3F5EA;      /* band behind "how a walk looks" */
+  --rose: #FFE6DF;
+  --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --body: "Onest", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--display); line-height: 1.04; letter-spacing: -.02em; text-wrap: balance; margin: 0; }
+h2 { font-size: clamp(2rem, 4.4vw, 3.4rem); font-weight: 800; }
+h3 { font-size: 1.35rem; font-weight: 700; letter-spacing: -.01em; }
+p { margin: 0; }
+img { display: block; max-width: 100%; height: auto; }
+.mono { font-family: var(--mono); font-size: .74rem; letter-spacing: .06em; text-transform: uppercase; }
+.muted { color: var(--muted); }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--tram); outline-offset: 3px; border-radius: 4px; }
+.hl { background: linear-gradient(transparent 58%, var(--sun) 58%, var(--sun) 92%, transparent 92%); padding-inline: .06em; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: .6em;
+  background: var(--tram); color: var(--on-tram);
+  font: 600 1.02rem/1 var(--body);
+  padding: 1.05em 1.5em; border: 0; border-radius: 999px;
+  text-decoration: none; cursor: pointer;
+  box-shadow: 0 10px 22px -12px var(--tram);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -12px var(--tram); }
+.btn .shutter { width: 14px; height: 14px; border-radius: 50%; border: 2px solid currentColor; position: relative; }
+.btn .shutter::after { content: ""; position: absolute; inset: 2px; border-radius: 50%; background: currentColor; }
+
+/* ---------- Header ---------- */
+.top { padding-block: 22px; }
+.top .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.brand { font: 800 1.15rem/1 var(--display); letter-spacing: -.01em; display: flex; align-items: center; gap: .55em; text-decoration: none; }
+.brand-mark { width: 26px; height: 20px; position: relative; }
+.brand-mark::before, .brand-mark::after { content: ""; position: absolute; width: 9px; height: 9px; border: 2.5px solid var(--tram); }
+.brand-mark::before { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.brand-mark::after { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+.top a.link { font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--tram); padding-bottom: 2px; }
+
+/* ---------- Hero ---------- */
+.hero { padding-block: clamp(16px, 4vw, 48px) clamp(48px, 7vw, 96px); overflow: hidden; }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+.hero h1 { font-size: clamp(2.6rem, 6.2vw, 5.2rem); font-weight: 800; }
+.hero h1 em { font-style: normal; color: var(--tram); }
+.hero .lead { font-size: 1.16rem; max-width: 34em; margin-top: 1.2rem; }
+.hero .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; margin-top: 2rem; }
+.hero .eyebrow { margin-bottom: 1.2rem; display: inline-block; color: var(--ink); background: var(--sun-soft); padding: .45em .8em; border-radius: 999px; }
+
+.pair { position: relative; padding: 0 0 12% 14%; }
+.print { margin: 0; background: var(--paper); padding: 10px 10px 0; border-radius: 16px; box-shadow: 0 24px 48px -28px rgba(35, 37, 57, .45), 0 0 0 1px var(--line); }
+.print figcaption { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 4px 12px; font-family: var(--mono); font-size: .66rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.print .shot { position: relative; border-radius: 10px; overflow: hidden; background: var(--sky); }
+.print .shot canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.pair .after .shot { aspect-ratio: 4 / 5; }
+.pair .before { position: absolute; left: 0; bottom: 0; width: 46%; transform: rotate(-6deg); }
+.pair .before .shot { aspect-ratio: 4 / 5; }
+.badge { position: absolute; top: 12px; left: 12px; font-family: var(--mono); font-size: .64rem; letter-spacing: .1em; text-transform: uppercase; padding: .4em .75em; border-radius: 999px; background: rgba(255,255,255,.92); color: var(--ink); white-space: nowrap; }
+.badge.go { background: var(--sun); }
+.badge.after-r { left: auto; right: 12px; }
+
+/* ---------- Viewfinder (light phone) ---------- */
+.vf { position: relative; background: var(--paper); border-radius: 24px; padding: 12px; box-shadow: 0 30px 60px -36px rgba(35, 37, 57, .5), 0 0 0 1px var(--line); }
+.vf-screen { position: relative; border-radius: 14px; overflow: hidden; aspect-ratio: 3 / 2; max-width: 100%; background: var(--sky); }
+.vf-screen canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.vf-ui { position: absolute; inset: 0; pointer-events: none; color: #fff; }
+.vf-ui .corner { position: absolute; width: 22px; height: 22px; border: 2px solid rgba(255,255,255,.9); }
+.vf-ui .c1 { top: 12px; left: 12px; border-right: 0; border-bottom: 0; }
+.vf-ui .c2 { top: 12px; right: 12px; border-left: 0; border-bottom: 0; }
+.vf-ui .c3 { bottom: 12px; left: 12px; border-right: 0; border-top: 0; }
+.vf-ui .c4 { bottom: 12px; right: 12px; border-left: 0; border-top: 0; }
+.vf-ui .grid { position: absolute; inset: 0; opacity: 0; transition: opacity .3s; }
+.vf-ui .grid i { position: absolute; background: rgba(255,255,255,.7); box-shadow: 0 0 2px rgba(0,0,0,.25); }
+.vf-ui .grid i:nth-child(1) { left: 33.333%; top: 0; bottom: 0; width: 1px; }
+.vf-ui .grid i:nth-child(2) { left: 66.666%; top: 0; bottom: 0; width: 1px; }
+.vf-ui .grid i:nth-child(3) { top: 33.333%; left: 0; right: 0; height: 1px; }
+.vf-ui .grid i:nth-child(4) { top: 66.666%; left: 0; right: 0; height: 1px; }
+.vf-ui .level { position: absolute; left: 50%; top: 50%; width: 34%; height: 2px; margin-left: -17%; }
+.vf-ui .level::before { content: ""; position: absolute; inset: 0; background: rgba(255,255,255,.85); border-radius: 2px; box-shadow: 0 0 3px rgba(0,0,0,.3); transition: background .25s; }
+.vf-ui .level.ok::before { background: var(--sun); }
+.vf-ui .level::after { content: ""; position: absolute; left: 50%; top: -5px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; border: 2px solid rgba(255,255,255,.85); }
+.vf-ui .level.ok::after { border-color: var(--sun); }
+.vf-ui .focus { position: absolute; width: 64px; height: 64px; border: 2px solid var(--sun); border-radius: 8px; opacity: 0; transform: translate(-50%, -50%); transition: opacity .3s; box-shadow: 0 0 0 1px rgba(0,0,0,.15); }
+.vf-ui .hud { position: absolute; left: 14px; right: 14px; bottom: 14px; display: flex; justify-content: space-between; gap: 10px; font-family: var(--mono); font-size: clamp(.58rem, 1.4vw, .72rem); letter-spacing: .05em; padding-inline: 18px; }
+.vf-ui .hud span { background: rgba(35, 37, 57, .55); padding: .3em .6em; border-radius: 6px; }
+.vf-ui .hud b { font-weight: 600; color: var(--sun); }
+.vf-ui .tag { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; background: rgba(255,255,255,.92); color: var(--ink); padding: .4em .8em; border-radius: 999px; white-space: nowrap; }
+.vf-ui .tag.go { background: var(--sun); }
+.vf-caption { display: flex; justify-content: space-between; gap: 12px; padding: 10px 6px 0; font-family: var(--mono); font-size: .66rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); flex-wrap: wrap; }
+
+/* ---------- Stops (sticky sequence) ---------- */
+.stops { position: relative; height: 470vh; background: var(--sky); }
+.stops-stage { position: sticky; top: env(safe-area-inset-top, 0px); height: 100vh; height: 100svh; display: flex; align-items: center; }
+.stops-stage .wrap { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
+.stops-head { margin-bottom: 1.4rem; }
+.stops-head h2 { font-size: clamp(1.6rem, 3vw, 2.6rem); }
+.stops-head p { margin-top: .6rem; }
+.stop-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.stop { padding: 12px 16px; border-radius: 14px; opacity: .5; transition: opacity .35s, background .35s; }
+.stop.on { opacity: 1; background: var(--paper); box-shadow: 0 10px 24px -18px rgba(35, 37, 57, .5); }
+.stop.done { opacity: .75; }
+.stop .mono { color: var(--tram); display: block; margin-bottom: .35rem; }
+.stop p { margin-top: .4rem; color: var(--muted); font-size: .98rem; max-width: 30em; }
+.stop.on p { color: var(--ink); }
+.progress { height: 6px; background: rgba(35, 37, 57, .1); border-radius: 6px; margin-top: 1.2rem; overflow: hidden; }
+.progress i { display: block; height: 100%; width: 0; background: var(--sun); border-radius: 6px; }
+
+/* ---------- Compare ---------- */
+.section { padding-block: clamp(64px, 9vw, 128px); }
+.compare .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 6vw, 88px); align-items: center; }
+.compare .copy p { margin-top: 1rem; max-width: 30em; }
+.ba { position: relative; aspect-ratio: 4 / 5; max-width: 100%; border-radius: 18px; overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: ew-resize; background: var(--sky); box-shadow: 0 30px 60px -36px rgba(35, 37, 57, .5); }
+.ba canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.ba .after-clip { position: absolute; inset: 0; clip-path: inset(0 0 0 50%); }
+.ba .handle { position: absolute; top: 0; bottom: 0; left: 50%; width: 0; }
+.ba .handle::before { content: ""; position: absolute; top: 0; bottom: 0; left: -1.5px; width: 3px; background: #fff; box-shadow: 0 0 8px rgba(0,0,0,.3); }
+.ba .knob { position: absolute; top: 50%; left: 0; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%; background: var(--sun); color: var(--ink); display: grid; place-items: center; font: 600 1.05rem/1 var(--mono); box-shadow: 0 6px 18px rgba(35, 37, 57, .35); border: 3px solid #fff; cursor: ew-resize; }
+.ba .lbl { position: absolute; top: 14px; font-family: var(--mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; background: rgba(255,255,255,.92); color: var(--ink); padding: .4em .75em; border-radius: 999px; pointer-events: none; }
+.ba .lbl.r { background: var(--sun); }
+.ba .lbl.l { left: 14px; } .ba .lbl.r { right: 14px; }
+.ba-note { margin-top: .8rem; }
+
+/* ---------- Gallery ---------- */
+.gallery { padding-top: 0; }
+.gallery .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px 32px; }
+.gallery .head p { max-width: 30em; }
+.shots { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin-top: 2.4rem; }
+.shots figure { margin: 0; }
+.shots figure:nth-child(even) { margin-top: 36px; }
+.shots img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 14px; }
+.shots figcaption { margin-top: .7rem; }
+.shots figcaption strong { display: block; font: 700 1.1rem/1.2 var(--display); }
+.shots figcaption span { color: var(--muted); font-size: .95rem; }
+
+/* ---------- Who / walk ---------- */
+.who { background: var(--rose); }
+.who .wrap { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(28px, 6vw, 88px); align-items: center; }
+.who .photo { margin: 0; }
+.who .photo img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 30%; border-radius: 20px; }
+.who .photo figcaption { margin-top: .6rem; }
+.who .big { font: 700 clamp(1.6rem, 3vw, 2.4rem)/1.18 var(--display); letter-spacing: -.015em; text-wrap: balance; margin-top: .6rem; }
+.who ul { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; gap: 14px; }
+.who li { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: 14px; align-items: baseline; background: var(--paper); border-radius: 14px; padding: 14px 18px; }
+.who li .mono { color: var(--tram); font-weight: 600; }
+
+.walk { background: var(--mint); }
+.walk ol { list-style: none; margin: 2.4rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; counter-reset: s; }
+.walk li { counter-increment: s; background: var(--paper); border-radius: 18px; padding: 20px; }
+.walk li::before { content: counter(s); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--sun); font: 700 1rem/1 var(--display); margin-bottom: .9rem; }
+.walk li p { margin-top: .5rem; color: var(--muted); font-size: .98rem; }
+.walk .confirm { margin-top: 1.6rem; }
+
+/* ---------- To fill ---------- */
+.todo { border: 2px dashed rgba(35, 37, 57, .2); border-radius: 14px; padding: 20px 22px; display: grid; gap: 6px; align-content: start; background: rgba(255,255,255,.55); }
+.todo .mono { color: var(--tram); }
+.todo p { color: var(--muted); font-size: .96rem; }
+.people .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(24px, 4vw, 48px); }
+.people .quotes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.people h2 { margin-bottom: 1.2rem; font-size: clamp(1.7rem, 3vw, 2.4rem); }
+.people .q { font: 500 1.1rem/1.35 var(--display); color: var(--muted); }
+
+/* ---------- Signup ---------- */
+.signup .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(28px, 6vw, 88px); align-items: start; }
+.signup .copy p { margin-top: 1rem; max-width: 30em; }
+.signup .after-thumb { margin-top: 2rem; max-width: 300px; transform: rotate(2deg); }
+.signup .after-thumb .shot { aspect-ratio: 4 / 5; }
+.signup .after-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.facts { margin-top: 1.6rem; }
+form { background: var(--paper); border-radius: 22px; padding: clamp(20px, 3vw, 34px); display: grid; gap: 18px; box-shadow: 0 30px 60px -40px rgba(35, 37, 57, .5), 0 0 0 1px var(--line); }
+.field { display: grid; gap: 6px; }
+label, legend { font-weight: 600; font-size: .95rem; }
+input[type="text"], input[type="email"], textarea {
+  width: 100%; font: inherit; color: var(--ink); background: var(--bg);
+  border: 1.5px solid var(--line); border-radius: 12px; padding: .8em .9em;
+}
+input:focus, textarea:focus { outline: none; border-color: var(--tram); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tram) 22%, transparent); }
+textarea { min-height: 92px; resize: vertical; }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 8px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips label { font-weight: 500; display: inline-flex; align-items: center; gap: .5em; border: 1.5px solid var(--line); border-radius: 999px; padding: .5em .95em; cursor: pointer; }
+.chips input { accent-color: var(--tram); }
+.chips label:has(input:checked) { border-color: var(--tram); background: var(--rose); }
+.err { color: var(--tram); font-size: .88rem; }
+.err:empty { display: none; }
+.status { border-radius: 12px; padding: 14px 16px; background: var(--sun-soft); font-size: .95rem; }
+.hint { font-size: .86rem; color: var(--muted); }
+
+footer { padding-block: 40px 56px; border-top: 1px solid var(--line); color: var(--muted); font-size: .92rem; }
+footer .wrap { display: grid; gap: 14px; }
+footer .row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+footer .credits a { color: var(--ink); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .hero .wrap, .compare .wrap, .who .wrap, .signup .wrap, .people .wrap { grid-template-columns: minmax(0, 1fr); }
+  .pair { max-width: 520px; margin-inline: auto; width: 100%; }
+  .walk ol, .shots { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .people .quotes { grid-template-columns: minmax(0, 1fr); }
+  .who .photo { max-width: 420px; }
+  .stops-stage .wrap { grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: center; }
+  .stops-head { margin-bottom: .2rem; }
+  .stops-head h2 { font-size: 1.6rem; }
+  .stops-head p { display: none; }
+  .stops-stage .vf-screen { aspect-ratio: 4 / 3.4; max-height: 46svh; width: 100%; }
+  .stop-list { min-height: 9.5em; }
+  .js .stop { display: none; }
+  .js .stop.on { display: block; opacity: 1; }
+  .compare .ba { max-height: 78svh; margin-inline: auto; }
+}
+@media (max-width: 520px) {
+  body { font-size: 16px; }
+  .walk ol { grid-template-columns: minmax(0, 1fr); }
+  .shots { gap: 12px; }
+  .shots figure:nth-child(even) { margin-top: 20px; }
+  .who li { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .vf { padding: 8px; border-radius: 18px; }
+  .vf-ui .tag { font-size: .55rem; }
+  .badge { font-size: .56rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Poza Kadrem, początek strony"><span class="brand-mark" aria-hidden="true"></span>Poza Kadrem</a>
+    <a class="link" href="#zapis">Zapisz się</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow mono">Spacery fotograficzne po mieście</span>
+        <h1>Zrób telefonem zdjęcie, które <em>chcesz pokazać.</em></h1>
+        <p class="lead">Masz w telefonie tysiące zdjęć, a żadne nie wygląda tak dobrze jak to, co widać na żywo? Na spacerze z Poza Kadrem uczysz się patrzeć: gdzie stanąć, kiedy nacisnąć i co zostawić poza kadrem. Wystarczy telefon, który masz w kieszeni.</p>
+        <div class="actions">
+          <a class="btn" href="#zapis"><span class="shutter" aria-hidden="true"></span>Zapisz się na spacer</a>
+          <span class="muted">albo przewiń i popraw zdjęcie razem z nami</span>
+        </div>
+      </div>
+      <div class="pair">
+        <figure class="print after" aria-label="Przykład zdjęcia po spacerze: kolorowy plac w słońcu, prosto i jasno">
+          <div class="shot" data-scene="hero-after">
+            <canvas aria-hidden="true"></canvas>
+            <span class="badge go after-r">Po spacerze</span>
+          </div>
+          <figcaption><span>Przykład · zdjęcie z Pexels</span><span>prosto, jasno, bez auta</span></figcaption>
+        </figure>
+        <figure class="print before" aria-label="To samo miejsce przed spacerem: krzywo, szaro, z samochodem na pierwszym planie">
+          <div class="shot" data-scene="hero-before">
+            <canvas aria-hidden="true"></canvas>
+            <span class="badge">Przed</span>
+          </div>
+          <figcaption><span>Krzywo i szaro</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="stops" id="przystanki" aria-labelledby="stops-title">
+    <div class="stops-stage">
+      <div class="wrap">
+        <div class="vf">
+          <div class="vf-screen" data-scene="stops">
+            <canvas aria-hidden="true"></canvas>
+            <div class="vf-ui" aria-hidden="true">
+              <i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i>
+              <div class="grid"><i></i><i></i><i></i><i></i></div>
+              <div class="focus"></div>
+              <span class="tag">Przed spacerem</span>
+              <div class="level"></div>
+              <div class="hud"><span class="h-level">Poziom <b>−6°</b></span><span class="h-ev">Ekspozycja <b>−1,3 EV</b></span></div>
+            </div>
+          </div>
+          <div class="vf-caption"><span>Przykład · zdjęcie z Pexels</span><span class="cap-state">Ujęcie 1 z 5</span></div>
+        </div>
+        <div>
+          <div class="stops-head">
+            <span class="mono muted">Jeden róg ulicy</span>
+            <h2 id="stops-title">Cztery przystanki, jedno lepsze zdjęcie.</h2>
+            <p class="muted">Przewijaj powoli. Na każdym przystanku spaceru zmieniamy w zdjęciu jedną rzecz.</p>
+          </div>
+          <ol class="stop-list">
+            <li class="stop on" data-i="0">
+              <span class="mono">Przystanek 1</span>
+              <h3>Wyprostuj horyzont</h3>
+              <p>Krzywe kamienice widać jako pierwsze. Pokazujemy, jak włączyć siatkę w aparacie i trzymać telefon prosto bez zastanawiania się.</p>
+            </li>
+            <li class="stop" data-i="1">
+              <span class="mono">Przystanek 2</span>
+              <h3>Złap światło</h3>
+              <p>To samo miejsce w słońcu wygląda jak inna ulica. Uczysz się widzieć, skąd pada światło, i ustawiać jasność jednym ruchem palca.</p>
+            </li>
+            <li class="stop" data-i="2">
+              <span class="mono">Przystanek 3</span>
+              <h3>Zostaw bałagan poza kadrem</h3>
+              <p>Słup, znak, pół markizy. Zamiast przybliżać palcami, podchodzisz bliżej i stawiasz to, co ważne, na linii siatki.</p>
+            </li>
+            <li class="stop" data-i="3">
+              <span class="mono">Przystanek 4</span>
+              <h3>Złap moment</h3>
+              <p>Kadr gotowy. Czekasz, aż tramwaj wjedzie w słońce, ustawiasz ostrość jednym dotknięciem i naciskasz. To cierpliwość, a nie szczęście.</p>
+            </li>
+          </ol>
+          <div class="progress" aria-hidden="true"><i></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section compare" aria-labelledby="cmp-title">
+    <div class="wrap">
+      <div class="copy">
+        <span class="mono muted">Sprawdź sam</span>
+        <h2 id="cmp-title">Przeciągnij i <span class="hl">porównaj.</span></h2>
+        <p>To samo miejsce i ten sam telefon. Różnica bierze się z kilku nawyków, które ćwiczymy na spacerze, aż przestaniesz o nich myśleć.</p>
+        <p class="muted">Na razie pokazujemy przykład ze zdjęcia z banku zdjęć. Wersję „przed” przygotowaliśmy sami: przechyliliśmy kadr, przyciemniliśmy go i odebraliśmy mu kolor. Tu pojawią się prawdziwe pary zdjęć uczestników.</p>
+      </div>
+      <div>
+        <div class="ba" id="ba">
+          <canvas class="c-before" aria-hidden="true"></canvas>
+          <div class="after-clip"><canvas class="c-after" aria-hidden="true"></canvas></div>
+          <span class="lbl l">Przed</span><span class="lbl r">Po spacerze</span>
+          <div class="handle"><button class="knob" type="button" role="slider" aria-label="Granica między zdjęciem przed i po" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% zdjęcia po spacerze">⇆</button></div>
+        </div>
+        <p class="ba-note mono muted">Przykład · zdjęcie z Pexels · kadr 4:5</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section gallery" aria-labelledby="gal-title">
+    <div class="wrap">
+      <div class="head">
+        <div>
+          <span class="mono muted">Czego szukamy na spacerze</span>
+          <h2 id="gal-title" style="margin-top:.6rem">Miasto jest pełne kadrów.</h2>
+        </div>
+        <p class="muted">Kolor, cień, detal i człowiek. Na spacerze uczysz się je zauważać. Poniżej przykłady z banku zdjęć, nie prace uczestników.</p>
+      </div>
+      <div class="shots">
+        <figure><img src="img/alley.jpg" alt="Kolorowa uliczka z kawiarnianymi parasolami i kamienicami w ciepłych kolorach" loading="lazy" width="900" height="1350"><figcaption><strong>Kolor</strong><span>Szukasz miejsca, gdzie kolory same układają się w kadr.</span></figcaption></figure>
+        <figure><img src="img/chairs.jpg" alt="Kawiarniane stoliki i krzesła w ostrym słońcu i cieniu" loading="lazy" width="800" height="1067"><figcaption><strong>Światło i cień</strong><span>Ostre słońce rysuje wzory. Wystarczy je zobaczyć.</span></figcaption></figure>
+        <figure><img src="img/cafe.jpg" alt="Narożna kawiarnia z czerwoną markizą i przechodniami" loading="lazy" width="800" height="1200"><figcaption><strong>Detal</strong><span>Szyld, markiza, kwiaty. Podchodzisz bliżej i zostawiasz resztę.</span></figcaption></figure>
+        <figure><img src="img/walker.jpg" alt="Osoba z plecakiem idzie w słońcu brukowaną ulicą obok tramwaju" loading="lazy" width="800" height="1200"><figcaption><strong>Człowiek w kadrze</strong><span>Jedna postać w dobrym miejscu ożywia całą ulicę.</span></figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section who" aria-labelledby="who-title">
+    <div class="wrap">
+      <figure class="photo">
+        <img src="img/who.jpg" alt="Uśmiechnięta kobieta z telefonem w ręku na miejskiej ulicy" loading="lazy" width="900" height="1350">
+        <figcaption class="mono muted">Zdjęcie poglądowe z Pexels</figcaption>
+      </figure>
+      <div>
+        <span class="mono muted">Dla kogo</span>
+        <h2 id="who-title" class="big">Dla każdego, kto robi zdjęcia telefonem i chce, żeby <span class="hl">wreszcie wyglądały tak, jak to, co widać na żywo.</span></h2>
+        <ul>
+          <li><span class="mono">Bez sprzętu</span><p>Nie potrzebujesz aparatu ani obiektywów. Ćwiczymy na telefonie, który już masz.</p></li>
+          <li><span class="mono">Bez teorii</span><p>Żadnych wykładów o przysłonie. Uczysz się na ulicy, robiąc zdjęcia.</p></li>
+          <li><span class="mono">Bez wstydu</span><p>Wszyscy zaczynamy od krzywej latarni. Spacer jest dla amatorów i takim tempem idzie.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section walk" aria-labelledby="walk-title">
+    <div class="wrap">
+      <span class="mono muted">Jak wygląda spacer</span>
+      <h2 id="walk-title" style="margin-top:.6rem">Idziemy, patrzymy, fotografujemy.</h2>
+      <ol>
+        <li><h3>Zbiórka</h3><p>Spotykamy się w umówionym miejscu w mieście. Bierzesz tylko naładowany telefon.</p></li>
+        <li><h3>Przystanki</h3><p>Na każdym przystanku jedno ćwiczenie: poziom, światło, kadr albo moment.</p></li>
+        <li><h3>Podpowiedzi</h3><p>Fotografujesz swoim telefonem, a prowadzący podpowiada na bieżąco, co zmienić.</p></li>
+        <li><h3>Twoje kadry</h3><p>Na koniec wybieramy Twoje najlepsze zdjęcia i omawiamy, co w nich zadziałało.</p></li>
+      </ol>
+      <div class="todo confirm">
+        <span class="mono">Do uzupełnienia</span>
+        <p>Czas trwania spaceru, wielkość grupy i trasa. Przebieg powyżej to propozycja do potwierdzenia.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section people" aria-labelledby="people-title">
+    <div class="wrap">
+      <div>
+        <h2 id="people-title">Kto prowadzi</h2>
+        <div class="todo">
+          <span class="mono">Do uzupełnienia</span>
+          <p>Imię prowadzącego, kilka zdań o doświadczeniu i 2–3 zdjęcia jego autorstwa.</p>
+        </div>
+      </div>
+      <div>
+        <h2>Co mówią uczestnicy</h2>
+        <div class="quotes">
+          <div class="todo"><span class="mono">Opinia 1 · do uzupełnienia</span><p class="q">Miejsce na prawdziwą opinię uczestnika, z imieniem i za zgodą.</p></div>
+          <div class="todo"><span class="mono">Opinia 2 · do uzupełnienia</span><p class="q">Miejsce na prawdziwą opinię uczestnika.</p></div>
+          <div class="todo"><span class="mono">Opinia 3 · do uzupełnienia</span><p class="q">Miejsce na prawdziwą opinię uczestnika.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section signup" id="zapis" aria-labelledby="signup-title" style="padding-top:0">
+    <div class="wrap">
+      <div class="copy">
+        <span class="mono muted">Zapis</span>
+        <h2 id="signup-title" style="margin-top:.6rem">Zapisz się na spacer.</h2>
+        <p>Zostaw imię i e-mail, wybierz porę, która Ci pasuje. Odezwiemy się z najbliższym terminem i miejscem zbiórki.</p>
+        <div class="todo facts">
+          <span class="mono">Do uzupełnienia</span>
+          <p>Najbliższe terminy, miejsce zbiórki i cena.</p>
+        </div>
+        <figure class="print after-thumb" aria-label="Przykładowy kadr: kolorowa uliczka w słońcu">
+          <div class="shot"><img src="img/alley.jpg" alt="" loading="lazy" width="900" height="1350"><span class="badge go">Twój kadr może tak wyglądać</span></div>
+          <figcaption><span>Przykład · zdjęcie z Pexels</span></figcaption>
+        </figure>
+      </div>
+      <form id="form" novalidate>
+        <div class="field">
+          <label for="f-name">Imię</label>
+          <input id="f-name" name="name" type="text" autocomplete="given-name" required>
+          <span class="err" id="e-name"></span>
+        </div>
+        <div class="field">
+          <label for="f-email">E-mail</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required inputmode="email">
+          <span class="err" id="e-email"></span>
+        </div>
+        <fieldset>
+          <legend>Kiedy Ci pasuje?</legend>
+          <div class="chips">
+            <label><input id="f-t1" type="radio" name="time" value="weekend" checked> W weekend</label>
+            <label><input id="f-t2" type="radio" name="time" value="wieczor"> W tygodniu wieczorem</label>
+            <label><input id="f-t3" type="radio" name="time" value="obojetnie"> Obojętnie</label>
+          </div>
+        </fieldset>
+        <div class="field">
+          <label for="f-note">Coś, co chcesz nam powiedzieć <span class="muted" style="font-weight:400">(opcjonalnie)</span></label>
+          <textarea id="f-note" name="note" placeholder="Na przykład: najczęściej fotografuję dzieci i nic mi nie wychodzi"></textarea>
+        </div>
+        <div><button class="btn" type="submit"><span class="shutter" aria-hidden="true"></span>Zapisz się na spacer</button></div>
+        <div class="status" id="status" role="status" hidden></div>
+        <p class="hint">Twoje dane posłużą tylko do kontaktu w sprawie spaceru.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <span><strong>Poza Kadrem</strong> · spacery fotograficzne</span>
+      <span>Zdjęcia na stronie to przykłady z banku zdjęć, nie prace uczestników. Wersje „przed” przygotowaliśmy cyfrowo.</span>
+    </div>
+    <p class="credits">Zdjęcia: Pexels (licencja Pexels) ·
+      <a href="https://www.pexels.com/photo/a-red-tram-on-a-street-in-lisboa-carrying-people-inside-on-a-sunny-day-in-spring-19891046/" target="_blank" rel="noopener">tramwaj w Lizbonie</a> ·
+      <a href="https://www.pexels.com/photo/lisbon-old-town-street-16549939/" target="_blank" rel="noopener">ulica z żółtym tramwajem</a> ·
+      <a href="https://www.pexels.com/photo/8243085/" target="_blank" rel="noopener">kolorowy plac</a> ·
+      <a href="https://www.pexels.com/photo/charming-outdoor-cafe-in-historic-european-alley-28602912/" target="_blank" rel="noopener">uliczka</a> ·
+      <a href="https://www.pexels.com/photo/seats-of-sidewalk-cafe-in-sunlight-and-shadow-18514115/" target="_blank" rel="noopener">stoliki w słońcu</a> ·
+      <a href="https://www.pexels.com/photo/a-street-scene-with-people-walking-and-a-cafe-27862056/" target="_blank" rel="noopener">kawiarnia</a> ·
+      <a href="https://www.pexels.com/photo/person-walking-on-sunlit-pavement-near-tram-13282365/" target="_blank" rel="noopener">przechodzień</a> ·
+      <a href="https://www.pexels.com/photo/cheerful-young-woman-using-smartphone-in-street-3807742/" target="_blank" rel="noopener">osoba z telefonem</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  document.documentElement.classList.add('js');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- Photos as worlds: camera = rotation, zoom (1 = full width), centre in image pixels ---------- */
+  function photo(src, w, h) { var img = new Image(); img.src = src; return { img: img, W: w, H: h }; }
+  var STREET = photo('img/street.jpg', 2000, 1333);   // red tram, Lisbon
+  var SLIDE = photo('img/slider.jpg', 1100, 1650);    // yellow tram street
+  var SQUARE = photo('img/hero.jpg', 1400, 1867);     // colourful square
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+  var DULL = { bri: .74, con: .86, sat: .45, warm: 0, cool: 1 };
+  var BRIGHT = { bri: 1.05, con: 1.05, sat: 1.14, warm: 1, cool: 0 };
+
+  // fit the rotated view inside the photo: shrink the view and clamp the centre so no empty corners show
+  function camera(world, st, aspect) {
+    var r = Math.abs(st.rot) * Math.PI / 180, c = Math.cos(r), s = Math.sin(r);
+    var vw = Math.min(world.W / st.zoom, world.W / (c + s / aspect), world.H / (s + c / aspect));
+    var ex = vw * (c + s / aspect) / 2, ey = vw * (s + c / aspect) / 2;
+    return {
+      vw: vw,
+      cx: Math.min(world.W - ex, Math.max(ex, st.cx)),
+      cy: Math.min(world.H - ey, Math.max(ey, st.cy))
+    };
+  }
+
+  function render(canvas, world, st) {
+    var rect = canvas.getBoundingClientRect();
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var W = Math.max(1, Math.round(rect.width * dpr)), H = Math.max(1, Math.round(rect.height * dpr));
+    if (canvas.width !== W || canvas.height !== H) { canvas.width = W; canvas.height = H; }
+    var g = canvas.getContext('2d');
+    var cam = camera(world, st, W / H), s = W / cam.vw;
+    g.setTransform(1, 0, 0, 1, 0, 0);
+    g.globalCompositeOperation = 'source-over';
+    g.fillStyle = '#dbe6ef'; g.fillRect(0, 0, W, H);
+    if (world.img.complete && world.img.naturalWidth) {
+      g.translate(W / 2, H / 2); g.rotate(st.rot * Math.PI / 180); g.scale(s, s); g.translate(-cam.cx, -cam.cy);
+      g.drawImage(world.img, 0, 0, world.W, world.H);
+      g.setTransform(1, 0, 0, 1, 0, 0);
+    }
+    // grey overcast cast for "before", warm sun for "after"
+    if (st.cool > 0) { g.fillStyle = 'rgba(120, 132, 146,' + (st.cool * .22).toFixed(3) + ')'; g.fillRect(0, 0, W, H); }
+    if (st.warm > 0) { g.globalCompositeOperation = 'soft-light'; g.fillStyle = 'rgba(255, 176, 92,' + (st.warm * .32).toFixed(3) + ')'; g.fillRect(0, 0, W, H); g.globalCompositeOperation = 'source-over'; }
+    canvas.style.filter = 'brightness(' + st.bri.toFixed(3) + ') contrast(' + st.con.toFixed(3) + ') saturate(' + st.sat.toFixed(3) + ')';
+    return { W: W, H: H, s: s, cx: cam.cx, cy: cam.cy };
+  }
+  function mix(a, b, t) { var o = {}; for (var k in a) o[k] = lerp(a[k], b[k], t); return o; }
+  function look(base, tone) { var o = {}; for (var k in base) o[k] = base[k]; for (var j in tone) o[j] = tone[j]; return o; }
+
+  /* ---------- Street sequence ---------- */
+  var TRAM = { x: 830, y: 780 };          // front of the tram, in photo pixels
+  var BEFORE = look({ rot: -6, zoom: 1.12, cx: 1250, cy: 600 }, DULL);
+  function framed(aspect, zoom) {
+    var vw = STREET.W / zoom;
+    return { zoom: zoom, cx: TRAM.x + vw / 6, cy: 740 };   // tram front on the left third line
+  }
+  function stateAt(p, aspect) {
+    var t1 = ease(Math.min(1, Math.max(0, p))), t2 = ease(Math.min(1, Math.max(0, p - 1))),
+        t3 = ease(Math.min(1, Math.max(0, p - 2))), t4 = ease(Math.min(1, Math.max(0, p - 3)));
+    if (reduce) { t1 = p >= .5 ? 1 : 0; t2 = p >= 1.5 ? 1 : 0; t3 = p >= 2.5 ? 1 : 0; t4 = p >= 3.5 ? 1 : 0; }
+    var f3 = framed(aspect, 1.4), f4 = framed(aspect, aspect < 1.3 ? 1.8 : 1.6);
+    var tone = mix(DULL, BRIGHT, t2);
+    return look({
+      rot: lerp(BEFORE.rot, 0, t1),
+      zoom: lerp(lerp(BEFORE.zoom, f3.zoom, t3), f4.zoom, t4),
+      cx: lerp(lerp(BEFORE.cx, f3.cx, t3), f4.cx, t4),
+      cy: lerp(lerp(BEFORE.cy, f3.cy, t3), f4.cy, t4),
+      t: [t1, t2, t3, t4]
+    }, tone);
+  }
+
+  /* ---------- Static scenes ---------- */
+  var heroAfter = document.querySelector('[data-scene="hero-after"] canvas');
+  var heroBefore = document.querySelector('[data-scene="hero-before"] canvas');
+  function aspectOf(el) { var r = el.getBoundingClientRect(); return r.width / Math.max(1, r.height); }
+  function drawStatics() {
+    render(heroAfter, SQUARE, look({ rot: 0, zoom: 1, cx: 760, cy: 900 }, BRIGHT));
+    render(heroBefore, SQUARE, look({ rot: -7, zoom: 1.5, cx: 380, cy: 1500 }, DULL));
+  }
+
+  /* ---------- Scroll sequence ---------- */
+  var section = document.getElementById('przystanki');
+  var stopsScreen = document.querySelector('[data-scene="stops"]');
+  var stopsCanvas = stopsScreen.querySelector('canvas');
+  var stops = Array.prototype.slice.call(document.querySelectorAll('.stop'));
+  var bar = document.querySelector('.progress i');
+  var ui = {
+    grid: stopsScreen.querySelector('.grid'), level: stopsScreen.querySelector('.level'), focus: stopsScreen.querySelector('.focus'),
+    tag: stopsScreen.querySelector('.tag'), hl: stopsScreen.querySelector('.h-level'), hev: stopsScreen.querySelector('.h-ev'),
+    cap: document.querySelector('.cap-state')
+  };
+  var lastActive = -1;
+  function fmt(n) { return (n < 0 ? '−' : n > 0 ? '+' : '') + Math.abs(n).toFixed(1).replace('.', ','); }
+
+  function updateStops() {
+    var r = section.getBoundingClientRect();
+    var total = section.offsetHeight - window.innerHeight;
+    var raw = Math.min(1, Math.max(0, -r.top / Math.max(1, total)));
+    // hold "before" for the first 6%, finish at 96%
+    var p = Math.min(4, Math.max(0, (raw - .06) / .9 * 4));
+    var a = aspectOf(stopsCanvas), st = stateAt(p, a);
+    var info = render(stopsCanvas, STREET, st);
+    var t = st.t, deg = st.rot;
+    ui.level.style.transform = 'rotate(' + (-deg) + 'deg)';
+    ui.level.classList.toggle('ok', Math.abs(deg) < .3);
+    ui.hl.innerHTML = 'Poziom <b>' + (Math.abs(deg) < .05 ? '0' : fmt(deg).replace(',0', '')) + '°</b>';
+    var ev = lerp(-1.3, 0, t[1]);
+    ui.hev.innerHTML = 'Ekspozycja <b>' + (Math.abs(ev) < .05 ? '0' : fmt(ev)) + ' EV</b>';
+    ui.grid.style.opacity = (t[2] * .9).toFixed(2);
+    ui.level.style.opacity = (1 - t[2] * .8).toFixed(2);
+    // focus box locks on the tram in the last stop
+    if (t[3] > .02) {
+      ui.focus.style.left = ((TRAM.x - info.cx) * info.s / info.W * 100 + 50) + '%';
+      ui.focus.style.top = ((TRAM.y - info.cy) * info.s / info.H * 100 + 50) + '%';
+      ui.focus.style.opacity = t[3] > .98 ? 1 : .55;
+    } else ui.focus.style.opacity = 0;
+    var active = Math.min(3, Math.floor(p));
+    var done = p >= 3.98;
+    ui.tag.textContent = done ? 'Po spacerze' : (p < .05 ? 'Przed spacerem' : 'Przystanek ' + (active + 1) + ' z 4');
+    ui.tag.classList.toggle('go', done);
+    ui.cap.textContent = done ? 'Ujęcie 5 z 5 · gotowe' : 'Ujęcie ' + (active + 1) + ' z 5';
+    bar.style.width = (p / 4 * 100).toFixed(1) + '%';
+    if (active !== lastActive) {
+      stops.forEach(function (el, i) { el.classList.toggle('on', i === active); el.classList.toggle('done', i < active); });
+      lastActive = active;
+    }
+  }
+
+  /* ---------- Before / after slider ---------- */
+  var ba = document.getElementById('ba');
+  var cBefore = ba.querySelector('.c-before'), cAfter = ba.querySelector('.c-after');
+  var clip = ba.querySelector('.after-clip'), handle = ba.querySelector('.handle'), knob = ba.querySelector('.knob');
+  var pos = 50;
+  function drawBA() {
+    render(cBefore, SLIDE, look({ rot: 5, zoom: 1.08, cx: 680, cy: 700 }, DULL));
+    render(cAfter, SLIDE, look({ rot: 0, zoom: 1.12, cx: 560, cy: 1020 }, BRIGHT));
+  }
+  function setPos(v) {
+    pos = Math.max(0, Math.min(100, v));
+    clip.style.clipPath = 'inset(0 0 0 ' + pos + '%)';
+    handle.style.left = pos + '%';
+    knob.setAttribute('aria-valuenow', Math.round(pos));
+    knob.setAttribute('aria-valuetext', Math.round(100 - pos) + '% zdjęcia po spacerze');
+  }
+  function fromEvent(e) { var r = ba.getBoundingClientRect(); return (e.clientX - r.left) / r.width * 100; }
+  var dragging = false;
+  ba.addEventListener('pointerdown', function (e) { dragging = true; ba.setPointerCapture(e.pointerId); setPos(fromEvent(e)); });
+  ba.addEventListener('pointermove', function (e) { if (dragging) setPos(fromEvent(e)); });
+  ba.addEventListener('pointerup', function () { dragging = false; });
+  ba.addEventListener('pointercancel', function () { dragging = false; });
+  knob.addEventListener('keydown', function (e) {
+    var k = e.key, step = e.shiftKey ? 10 : 4;
+    if (k === 'ArrowLeft' || k === 'ArrowDown') setPos(pos - step);
+    else if (k === 'ArrowRight' || k === 'ArrowUp') setPos(pos + step);
+    else if (k === 'Home') setPos(0);
+    else if (k === 'End') setPos(100);
+    else return;
+    e.preventDefault();
+  });
+
+  /* ---------- Form (no endpoint connected yet) ---------- */
+  var form = document.getElementById('form'), status = document.getElementById('status');
+  function setErr(id, msg) { document.getElementById(id).textContent = msg; }
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var fName = form.elements['f-name'], fEmail = form.elements['f-email'];
+    var name = fName.value.trim(), email = fEmail.value.trim(), ok = true;
+    setErr('e-name', ''); setErr('e-email', '');
+    if (!name) { setErr('e-name', 'Wpisz swoje imię, żebyśmy wiedzieli, jak się do Ciebie zwracać.'); ok = false; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setErr('e-email', 'Wpisz adres e-mail w formie imie@przyklad.pl. Na niego wyślemy termin.'); ok = false; }
+    if (!ok) { status.hidden = true; (name ? fEmail : fName).focus(); return; }
+    status.hidden = false;
+    status.textContent = 'Dzięki, ' + name + '! Formularz jest wypełniony poprawnie, ale zgłoszenie nie zostało wysłane: zapisy online nie są jeszcze podłączone. To podgląd strony.';
+  });
+
+  /* ---------- Loop ---------- */
+  var ticking = false;
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(function () { ticking = false; updateStops(); }); } }
+  function all() { drawStatics(); drawBA(); updateStops(); }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () { requestAnimationFrame(all); });
+  [STREET, SLIDE, SQUARE].forEach(function (w) { w.img.addEventListener('load', function () { requestAnimationFrame(all); }); });
+  setPos(50);
+  all();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(all);
+})();
+</script>
+</body>
+</html>
