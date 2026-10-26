@@ -67,16 +67,17 @@ section + section { border-top: 1px solid var(--line); }
 .hero .ba-wrap { grid-area: ba; align-self: center; min-width: 0; }
 
 /* Before / after slider */
-.ba { position: relative; aspect-ratio: 4 / 5; max-width: 100%; max-height: 78svh; margin-inline: auto; overflow: hidden; background: var(--line); user-select: none; -webkit-user-select: none; touch-action: pan-y; }
-.ba img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Compare Reveal (port of motiq.dev/components/compare-reveal, MIT): spring divider, one intro sweep, fading chips */
+.ba { position: relative; aspect-ratio: 4 / 5; max-width: 100%; max-height: 78svh; margin-inline: auto; overflow: hidden; border-radius: 16px; border: 1px solid var(--line); background: var(--line); user-select: none; -webkit-user-select: none; touch-action: pan-y; cursor: ew-resize; }
+.ba img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.ba .side { position: absolute; inset: 0; overflow: hidden; }
+.ba .side.top { will-change: clip-path; clip-path: inset(0 50% 0 0); }
 .ba .before { filter: saturate(.25) brightness(.72) contrast(.82); transform: rotate(-5deg) scale(1.2); transform-origin: 35% 60%; }
-.ba .after-layer { position: absolute; inset: 0; clip-path: inset(0 0 0 var(--pos, 50%)); }
-.ba .divider { position: absolute; top: 0; bottom: 0; left: var(--pos, 50%); width: 2px; margin-left: -1px; background: #fff; pointer-events: none; }
-.ba .divider::after { content: "⇆"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 46px; height: 46px; border-radius: 50%; background: #fff; color: #161615; display: grid; place-items: center; font-size: 1.05rem; box-shadow: 0 2px 10px rgba(0,0,0,.18); }
-.ba .tag { position: absolute; top: 14px; padding: 6px 10px; background: rgba(255,255,255,.94); color: #161615; font: 500 .7rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; pointer-events: none; }
-.ba .tag.l { left: 14px; } .ba .tag.r { right: 14px; background: var(--tram); }
-.ba input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
-.ba:has(input:focus-visible) .divider::after { outline: 2px solid var(--tram); outline-offset: 2px; }
+.ba .chip { position: absolute; top: 16px; z-index: 8; padding: 6px 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,.35); background: rgba(22,22,21,.5); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: #fff; font: 500 .66rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; pointer-events: none; transition: opacity .3s; }
+.ba .chip.l { left: 16px; } .ba .chip.r { right: 16px; }
+.ba .divider { position: absolute; top: 0; bottom: 0; left: 50%; z-index: 10; width: 2px; margin-left: -1px; background: color-mix(in oklab, var(--tram) 85%, white); pointer-events: none; will-change: left; }
+.ba .knob { position: absolute; left: 50%; top: 50%; width: 46px; height: 46px; transform: translate(-50%, -50%); display: grid; place-items: center; padding: 0; border-radius: 50%; border: 2px solid var(--tram); color: var(--tram); background: rgba(22,22,21,.62); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); cursor: ew-resize; pointer-events: auto; box-shadow: 0 0 0 6px color-mix(in oklab, var(--tram) 18%, transparent), 0 0 26px color-mix(in oklab, var(--tram) 45%, transparent); transition: box-shadow .2s; }
+.ba .knob:focus-visible { outline: 2px solid var(--tram); outline-offset: 4px; }
 
 /* Stops: sticky scroll sequence */
 .stops { position: relative; height: 430vh; padding: 0; }
@@ -211,12 +212,15 @@ footer a { color: var(--muted); }
         <a class="muted" href="#przystanki" style="font-size:.95rem">Zobacz, czego się nauczysz ↓</a>
       </div>
       <div class="ba-wrap">
-        <div class="ba" id="ba">
-          <img class="before" src="img/hero.jpg" alt="" width="1200" height="1553">
-          <div class="after-layer"><img src="img/hero.jpg" alt="Ulica w centrum Warszawy prowadząca prosto do Pałacu Kultury i Nauki, w ciepłym świetle" width="1200" height="1553"></div>
-          <span class="divider" aria-hidden="true"></span>
-          <span class="tag l">Przed</span><span class="tag r">Po spacerze</span>
-          <input id="ba-range" type="range" min="0" max="100" value="50" aria-label="Porównaj zdjęcie przed i po spacerze" aria-valuetext="50% zdjęcia po spacerze">
+        <div class="ba" id="ba" role="group" aria-label="Porównanie: przed i po spacerze">
+          <div class="side"><img src="img/hero.jpg" alt="Ulica w centrum Warszawy prowadząca prosto do Pałacu Kultury i Nauki, w ciepłym świetle" width="1200" height="1553" draggable="false"></div>
+          <div class="side top"><img class="before" src="img/hero.jpg" alt="" width="1200" height="1553" draggable="false"></div>
+          <span class="chip l" aria-hidden="true">Przed</span><span class="chip r" aria-hidden="true">Po</span>
+          <div class="divider">
+            <button class="knob" type="button" role="slider" aria-label="Linia podziału, przed i po" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-valuetext="50% przed">
+              <svg width="18" height="14" viewBox="0 0 18 14" fill="none" aria-hidden="true"><path d="M6 1 L1 7 L6 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 1 L17 7 L12 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
         </div>
         <div class="cap"><span class="mono">Przesuń suwak · wersja „przed” przerobiona cyfrowo</span></div>
       </div>
@@ -355,34 +359,90 @@ footer a { color: var(--muted); }
   function lerp(a, b, t) { return a + (b - a) * t; }
   function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
 
-  /* ---------- Hero before/after ---------- */
-  var ba = document.getElementById('ba'), range = document.getElementById('ba-range'), touched = false;
-  function setPos(v) {
-    range.value = v;
-    ba.style.setProperty('--pos', (100 - v) + '%');
-    range.setAttribute('aria-valuetext', Math.round(v) + '% zdjęcia po spacerze');
-  }
-  range.addEventListener('input', function () { touched = true; setPos(+range.value); });
-  setPos(50);
-  // one gentle sweep on load so it is obvious that the photo can be compared
-  if (!reduce) {
-    var t0 = null, keys = [[0, 50], [700, 12], [1700, 88], [2500, 50]];
-    function demo(ts) {
-      if (touched) return;
-      if (t0 === null) t0 = ts;
-      var t = ts - t0 - 600;
-      if (t < 0) { requestAnimationFrame(demo); return; }
-      for (var i = 1; i < keys.length; i++) {
-        if (t <= keys[i][0]) {
-          var k = ease((t - keys[i - 1][0]) / (keys[i][0] - keys[i - 1][0]));
-          setPos(lerp(keys[i - 1][1], keys[i][1], k));
-          requestAnimationFrame(demo); return;
-        }
-      }
-      setPos(50);
+  /* ---------- Hero before/after: Compare Reveal ported to plain JS ---------- */
+  (function () {
+    var root = document.getElementById('ba');
+    var top = root.querySelector('.side.top'), divider = root.querySelector('.divider'), knob = root.querySelector('.knob');
+    var chips = root.querySelectorAll('.chip');
+    var K = 140, C = 18, SWEEP = 2.6, STEP = 2, STEP_L = 10, FADE = 12, SNAP = 50;
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var s = { x: 50, v: 0, target: 50, dragging: false, id: null, intro: false, introDone: false, introStart: 0 };
+    var onScreen = true, raf = 0, last = 0;
+    function easeC(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+    function sweepAt(u) {
+      if (u < .38) return lerp(50, 96, easeC(u / .38));
+      if (u < .78) return lerp(96, 4, easeC((u - .38) / .4));
+      return lerp(4, 50, easeC((u - .78) / .22));
     }
-    requestAnimationFrame(demo);
-  }
+    function paint() {
+      var x = clamp(s.x, 0, 100);
+      top.style.clipPath = 'inset(0 ' + (100 - x).toFixed(3) + '% 0 0)';
+      divider.style.left = x.toFixed(3) + '%';
+      knob.setAttribute('aria-valuenow', Math.round(x));
+      knob.setAttribute('aria-valuetext', Math.round(x) + '% przed');
+      chips[0].style.opacity = x > FADE ? 1 : 0;
+      chips[1].style.opacity = x < 100 - FADE ? 1 : 0;
+    }
+    function still() { return mq.matches; }
+    function frame(ts) {
+      var dt = Math.min(.05, Math.max(.001, (ts - last) / 1000)); last = ts;
+      if (s.intro) {
+        var u = (ts / 1000 - s.introStart) / SWEEP;
+        if (u >= 1) { s.intro = false; s.introDone = true; s.target = 50; } else s.target = sweepAt(u);
+      }
+      s.v += ((s.target - s.x) * K - s.v * C) * dt;
+      s.x += s.v * dt;
+      if (s.x < 0) { s.x = 0; s.v = 0; }
+      if (s.x > 100) { s.x = 100; s.v = 0; }
+      paint();
+      raf = requestAnimationFrame(frame);
+    }
+    function start() {
+      if (raf || still() || !onScreen || document.visibilityState === 'hidden') return;
+      if (!s.introDone) { s.intro = true; s.introStart = performance.now() / 1000; }
+      last = performance.now();
+      raf = requestAnimationFrame(frame);
+    }
+    function stop() {
+      if (!raf) return;
+      cancelAnimationFrame(raf); raf = 0;
+      if (s.intro) { s.intro = false; s.introDone = false; s.target = 50; }   // an interrupted demo replays on the next entry
+    }
+    function sync() { if (still() || !onScreen || document.visibilityState === 'hidden') stop(); else start(); }
+    function commit(next) {
+      s.intro = false; s.introDone = true;
+      s.target = clamp(next, 0, 100);
+      if (still() || !raf) { s.x = s.target; s.v = 0; paint(); }
+    }
+    function fromX(clientX) { var r = root.getBoundingClientRect(); commit((clientX - r.left) / Math.max(1, r.width) * 100); }
+    root.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      s.dragging = true; s.id = e.pointerId;
+      if (root.setPointerCapture) root.setPointerCapture(e.pointerId);
+      fromX(e.clientX);
+    });
+    root.addEventListener('pointermove', function (e) { if (s.dragging && e.pointerId === s.id) fromX(e.clientX); });
+    function end() { s.dragging = false; s.id = null; }
+    root.addEventListener('pointerup', end);
+    root.addEventListener('pointercancel', end);
+    root.addEventListener('dblclick', function () { commit(SNAP); });
+    knob.addEventListener('keydown', function (e) {
+      var step = e.shiftKey ? STEP_L : STEP, base = s.target, next = base;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') next = base + step;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') next = base - step;
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = 100;
+      else return;
+      e.preventDefault(); commit(next);
+    });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (en) { onScreen = en.some(function (x) { return x.isIntersecting; }); sync(); }, { threshold: .2 }).observe(root);
+    }
+    document.addEventListener('visibilitychange', sync);
+    if (mq.addEventListener) mq.addEventListener('change', sync);
+    paint();
+    sync();
+  })();
 
   /* ---------- Stops: one street, fixed stop by stop ---------- */
   var section = document.getElementById('przystanki');
